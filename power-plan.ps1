@@ -154,12 +154,7 @@ function Get-BatteryStatus
     return $battery_status
 }
 
-$current_power_plan = $(powercfg.exe /getactivescheme) |% {$_.split(" ")[2]};
-$current_monitor_refresh_rate = Get-ScreenRefreshRate;
 $current_battery_status =  Get-BatteryStatus;
-
-$user_power_plan_uuid = "305a6627-c8b9-4c90-bfe1-4a42aeeb0288"
-$system_balanced_uuid = "381b4222-f694-41f0-9685-ff5bb260df2e"
 
 if ($current_battery_status -eq "Charging")
 {
@@ -168,9 +163,6 @@ if ($current_battery_status -eq "Charging")
   Set-ScreenRefreshRate -Frequency 90;
   Write-Output 'Change brightness to 95%';
   (Get-WmiObject -Namespace root/WMI -Class WmiMonitorBrightnessMethods).WmiSetBrightness(1,95)
-
-  powercfg -s $system_balanced_uuid; # get into Balanced Mode
-  Write-Output "Change into Balanced Mode";
 }
 else
 {
@@ -180,9 +172,6 @@ else
   Set-ScreenRefreshRate -Frequency 60;
   Write-Output 'Change brightness to 60%';
   (Get-WmiObject -Namespace root/WMI -Class WmiMonitorBrightnessMethods).WmiSetBrightness(1,60)
-
-  powercfg -s $user_power_plan_uuid;
-  Write-Output "Into Long Lifetime Mode"; # get into Long Life-time Mode
 }
 
-Read-Host -Prompt "Please enter a key to exit"
+# Read-Host -Prompt "Please enter a key to exit"
