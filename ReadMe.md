@@ -39,7 +39,7 @@ Intel 12 代处理器普遍续航拉跨，我早期对机器进行了大量测�
 5. Intel 核显模式（44f3beca-a7c0-460e-9df2-bb8b99e0cba6/3619c3f2-afb2-4afc-b0e9-e7fef372de36）。可选值 000 长续航，001 平衡，002 高性能。
 6. PCIE 节能模式（501a4d13-42af-4429-9fd1-a8218c268e20/ee12f906-d277-404b-b6da-e5fa1a576df5)
 7. 显示器（7516b95f-f776-4464-8c53-06167f40cc99）。其中包括了关闭显示器时间（3c0bc021-c8a8-4e07-a973-6b14cbcb2b7e）、亮度（aded5e82-b909-4619-9949-f5d71dac0bcb）、变暗比例（f1fbfde2-a960-4165-9f88-50667911ce96）、自适应亮度（fbd9aa66-9553-4097-ba44-ed6e9d65eab8）
-8. 播放视频优化（9596fb26-9850-41fd-ac3e-f7c3c00afd4b）。包括了性能/节能取向（10778347-1370-4ee0-8bbd-33bdacaade49),视频优化质量（ 34c7b99f-9a6d-4b3c-8dc7-b6693b78cef4）。
+8. 播放视频优化（9596fb26-9850-41fd-ac3e-f7c3c00afd4b）。包括了性能/节能取向（10778347-1370-4ee0-8bbd-33bdacaade49）,视频优化质量（ 34c7b99f-9a6d-4b3c-8dc7-b6693b78cef4）。
 9. 节能模式（de830923-a562-41af-a086-e3a2c6bad2da），就是Windows 右下角按一下开启的省电模式。包括了亮度降低比例（13d09884-f74e-474a-a852-b6bde8ad03a8）、是否自动开启节能模式（5c5bb349-ad29-4ee2-9d0b-2b25270f7a81）、自动开启节能模式的电量比例（e69653ca-cf7f-4f05-aa73-cb833fa90ad4）。
 10. 其他选项，比如电池什么时候自动关机、什么时候自动警告等。
 
@@ -51,13 +51,20 @@ Windows 的电源管理策略允许在接入电源（AC）和使用电池（DC�
 载入 pow 文件的方式是
 
 ``` powershell
-powercfg -import elliot-long-lifetime.pow -guid 3183f4d6-3435-48f6-aa41-dbe542ed6658
+powercfg -import elliot-long-lifetime.pow
 ```
 
 此后，应该可以在控制面板的“电源计划”里面看到一个名为“长续航模式”的电源计划。同时，也可以查询已有的电源计划：
 
 ```powershell
 powercfg -l
+```
+
+> 注意，脚本依赖“长续航模式”的`user_power_plan_uuid`变量需要改为上述命令中显示的GUID。
+
+设置模式的名称：
+``` powershell
+powercfg -CHANGENAME 305a6627-c8b9-4c90-bfe1-4a42aeeb0288 长续航模式
 ```
 
 或者查询上述变量的名称、GUID和属性值：
@@ -85,6 +92,4 @@ POWERCFG /EXPORT c:\scheme.pow 381b4222-f694-41f0-9685-ff5bb260df2e # 到处平�
 
 1. 自动在 长续航模式 和 平衡模式下进行切换。
 2. 在“长续航”模式下，默认直接打开系统自带的“节电模式”
-3. 针对 Thinkbook 14+ 在“长续航”下切换显示器为 60Hz，在“平衡”模式且充电时，切换回 90Hz。
-
-> 注意，脚本依赖“长续航模式”的GUID为 3183f4d6-3435-48f6-aa41-dbe542ed6658。因此在导入时需要注意指定 GUID，或者修改脚本的 `$user_power_plan_uuid` 变量。
+3. 针对 Thinkbook 14+ 在“长续航”下切换显示器为 60Hz，亮度为60%；在“平衡”模式且充电时，切换回 90Hz。
