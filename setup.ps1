@@ -16,3 +16,6 @@ else
     # Set-ScreenRefreshRate -frequency 144
     Write-Output "Into Long Lifetime Mode"; # get into Long Life-time Mode
 }
+
+Read-Host "回车以结束程序"
+
